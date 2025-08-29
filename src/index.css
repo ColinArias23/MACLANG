@@ -1,0 +1,15 @@
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 8px;
+  border-radius: 6px;
+  background: gray;
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+  background: rgba(220, 220, 220, 0.2);
+}
+
+@import "tailwindcss";
