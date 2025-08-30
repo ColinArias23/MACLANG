@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export default function CurrentDate() {
+const CurrentDate = () => {
   const [now, setNow] = useState(new Date());
   const [showPassword, setShowPassword] = useState(false);
 
@@ -16,12 +16,14 @@ export default function CurrentDate() {
     day: "numeric",
   });
 
+  const togglePasswordVisibility = () => setShowPassword((prev) => !prev);
+
   return (
     <div className="flex flex-col min-h-screen text-3xl font-bold">
       {/* DATE AND TIME */}
       <header className="bg-blue-900 text-white p-4 md:p-8 flex items-center justify-between">
-        <div className="text-left w-full md:w-1/2">{formattedDate}</div>
-        <div className="text-right w-full md:w-1/2">
+        <div className="w-full md:w-1/2">{formattedDate}</div>
+        <div className="w-full md:w-1/2 text-right">
           {now.toLocaleTimeString("en-US", {
             hour: "2-digit",
             minute: "2-digit",
@@ -30,7 +32,7 @@ export default function CurrentDate() {
         </div>
       </header>
 
-      {/* Body with Login Form */}
+      {/* LOGIN FORM */}
       <main className="flex flex-1 items-center justify-center bg-gray-200 p-4 md:p-8">
         <form className="bg-white rounded-lg shadow-md p-8 w-full max-w-md text-base font-normal flex flex-col items-center">
           {/* Logo */}
@@ -39,12 +41,15 @@ export default function CurrentDate() {
             alt="Maclang Logo"
             className="w-24 h-24 mb-4"
           />
+
           {/* Hospital Name */}
           <h2 className="text-2xl font-bold mb-6 text-center">
             Rosario Maclang Bautista General Hospital
           </h2>
+
+          {/* Username Field */}
           <div className="mb-4 w-full">
-            <label className="block mb-2" htmlFor="username">
+            <label htmlFor="username" className="block mb-2">
               Username
             </label>
             <input
@@ -54,8 +59,10 @@ export default function CurrentDate() {
               placeholder="Enter your username"
             />
           </div>
+
+          {/* Password Field */}
           <div className="mb-6 w-full relative">
-            <label className="block mb-2" htmlFor="password">
+            <label htmlFor="password" className="block mb-2">
               Password
             </label>
             <input
@@ -68,12 +75,14 @@ export default function CurrentDate() {
             <button
               type="button"
               className="absolute right-4 top-10 md:top-10 text-gray-500"
-              onClick={() => setShowPassword((prev) => !prev)}
+              onClick={togglePasswordVisibility}
               tabIndex={-1}
             >
               {showPassword ? "🙈" : "👁️"}
             </button>
           </div>
+
+          {/* Login Button */}
           <button
             type="submit"
             className="w-full bg-blue-900 text-white py-2 rounded-3xl hover:bg-blue-800 transition"
@@ -85,13 +94,10 @@ export default function CurrentDate() {
 
       {/* Footer */}
       <footer className="bg-blue-900 text-white text-center p-4 flex items-center justify-center">
-        {/* <img
-          src="/images/Maclang.png"
-          alt="Maclang Logo"
-          className="w-8 h-8 mr-2"
-        /> */}
         © 2025 IT DEPT. All Rights Reserved
       </footer>
     </div>
   );
-}
+};
+
+export default CurrentDate;
