@@ -192,7 +192,7 @@ const Main = () => {
 
       {/* Content */}
       <div
-        className={`flex-1 min-h-screen transition-all duration-300 p-4 bg-blue-900 ${
+        className={`flex-1 min-h-screen transition-all duration-300 p-4 bg-gray-50 ${
           isCollapsed ? "ml-[80px]" : "ml-[250px]"
         }`}
       >
