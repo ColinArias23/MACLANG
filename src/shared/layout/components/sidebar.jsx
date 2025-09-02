@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import Maclang from "../../../../images/Maclang.png";
+import { Layout, Menu, Avatar, Dropdown, Button, Tooltip } from "antd";
 import {
   HomeOutlined,
   ShopOutlined,
@@ -11,134 +11,258 @@ import {
   MenuUnfoldOutlined,
   MenuFoldOutlined,
 } from "@ant-design/icons";
+import Maclang from "../../../../images/Maclang.png";
+
+const { Sider } = Layout;
 
 function Sidebar({ isCollapsed, setIsCollapsed }) {
-  const [profileOpen, setProfileOpen] = useState(false);
-  const dropdownRef = useRef(null);
+  const [selectedKey, setSelectedKey] = useState("1");
 
-  const Menus = [
-    { title: "Dashboard", src: <HomeOutlined /> },
-    { title: "Department", src: <ShopOutlined /> },
-    { title: "Inbox", src: <InboxOutlined /> },
-    { title: "All", src: <TeamOutlined /> },
-    { title: "Settings", src: <SettingOutlined /> },
+  const menuItems = [
+    {
+      key: "1",
+      icon: <HomeOutlined className="text-lg" />,
+      label: "Dashboard",
+    },
+    {
+      key: "2",
+      icon: <ShopOutlined className="text-lg" />,
+      label: "Department",
+    },
+    {
+      key: "3",
+      icon: <InboxOutlined className="text-lg" />,
+      label: "Inbox",
+    },
+    {
+      key: "4",
+      icon: <TeamOutlined className="text-lg" />,
+      label: "All",
+    },
+    {
+      key: "5",
+      icon: <SettingOutlined className="text-lg" />,
+      label: "Settings",
+    },
   ];
 
-  // Close profile dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setProfileOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  const profileMenuItems = [
+    {
+      key: "profile",
+      icon: <UserOutlined />,
+      label: "Profile",
+    },
+    {
+      key: "settings",
+      icon: <SettingOutlined />,
+      label: "Account Settings",
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "logout",
+      icon: <LogoutOutlined />,
+      label: "Logout",
+      onClick: () => (window.location.href = "/login"),
+      className: "text-red-400 hover:text-red-300",
+    },
+  ];
+
+  const handleMenuClick = (e) => {
+    setSelectedKey(e.key);
+    // Add your navigation logic here
+    console.log("Menu clicked:", e.key);
+  };
 
   return (
-    <div
-      className={`${
-        isCollapsed ? "w-[80px]" : "w-[250px]"
-      } bg-blue-900 h-screen p-5 pt-7 duration-300 fixed flex flex-col justify-between border-r border-gray-500`}
+    <Sider
+      collapsed={isCollapsed}
+      onCollapse={setIsCollapsed}
+      width={280}
+      collapsedWidth={80}
+      className="shadow-xl border-r border-blue-200"
+      style={{
+        height: "100vh",
+        position: "fixed",
+        left: 0,
+        top: 0,
+        bottom: 0,
+        zIndex: 100,
+        background:
+          "linear-gradient(180deg, #ffffff 0%, #f8fafc 50%, #e2e8f0 100%)",
+      }}
     >
-      {/* Toggle Button */}
-      <button
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        className="flex items-center justify-center w-10 h-10 rounded-md bg-blue-800 text-white hover:bg-yellow-500 transition-all mb-6"
-      >
-        {isCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-      </button>
-
-      {/* Logo */}
-      <div className="flex gap-x-3 items-center mb-10">
-        <img
-          src={Maclang}
-          alt="Logo"
-          className="w-[130px] h-[130px] object-contain"
-        />
-        <h1
-          className={`text-white text-lg font-semibold whitespace-nowrap transition-all duration-300 ${
-            isCollapsed ? "opacity-0 w-0 overflow-hidden" : "opacity-100 w-auto"
-          }`}
-        >
-          RMBGH
-        </h1>
-      </div>
-
-      {/* Menu Items */}
-      <ul className="flex flex-col gap-y-2">
-        {Menus.map((menu, index) => (
-          <li
-            key={index}
-            className="relative group flex items-center gap-x-3 text-white text-sm cursor-pointer p-2 rounded-md hover:bg-yellow-500 transition-all"
-          >
-            {/* Icon */}
-            <span className="text-xl">{menu.src}</span>
-
-            {/* Normal Text (visible only if expanded) */}
-            <span
-              className={`whitespace-nowrap transition-all duration-300 ${
-                isCollapsed
-                  ? "opacity-0 w-0 overflow-hidden"
-                  : "opacity-100 w-auto"
-              }`}
-            >
-              {menu.title}
-            </span>
-
-            {/* Floating Tooltip (visible only when collapsed + hover) */}
-            {isCollapsed && (
-              <span className="absolute left-full ml-3 px-3 py-1 bg-yellow-500 text-white text-lg rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                {menu.title}
-              </span>
-            )}
-          </li>
-        ))}
-      </ul>
-
-      {/* Profile */}
-      <div className="mt-auto relative" ref={dropdownRef}>
-        <div
-          className="flex items-center gap-x-3 p-2 rounded-md cursor-pointer hover:bg-yellow-500"
-          onClick={() => setProfileOpen(!profileOpen)}
-        >
-          <div className="flex items-center justify-center w-10 h-10 bg-white rounded-full">
-            <UserOutlined className="text-white text-lg" />
+      <div className="flex flex-col h-full">
+        {/* Header with Toggle and Logo */}
+        <div className="p-5 pt-7 border-b border-blue-200">
+          {/* Toggle Button */}
+          <div className="flex justify-center mb-6">
+            <Button
+              type="text"
+              icon={isCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className="!text-blue-600 hover:!text-blue-800 hover:!bg-blue-50 !border-none !w-10 !h-10 !rounded-md transition-all duration-300"
+              size="large"
+            />
           </div>
-          <div
-            className={`transition-all duration-300 ${
-              isCollapsed
-                ? "opacity-0 w-0 overflow-hidden"
-                : "opacity-100 w-auto flex flex-col"
-            }`}
-          >
-            <span className="text-white text-sm font-medium">John Doe</span>
-            <span className="text-gray-300 text-xs">Admin</span>
+
+          {/* Logo Section - Centered */}
+          <div className="flex justify-center items-center mb-10 transition-all duration-300">
+            <div className="flex-shrink-0">
+              <img
+                src={Maclang}
+                alt="RMBGH Logo"
+                className={`object-contain transition-all duration-300 ${
+                  isCollapsed ? "w-10 h-10" : "w-16 h-16"
+                }`}
+              />
+            </div>
           </div>
         </div>
 
-        {/* Logout Button */}
-        {profileOpen && (
-          <div
-            className={`absolute bottom-14 bg-blue-900 rounded-lg shadow-md transition-all duration-300 ${
-              isCollapsed ? "left-[85px] w-[200px]" : "left-0 w-full"
-            }`}
-          >
-            <ul className="p-2">
-              <li>
-                <button
-                  onClick={() => (window.location.href = "/login")}
-                  className="flex items-center gap-x-2 w-full text-left text-white text-sm p-2 rounded-md hover:bg-yellow-500"
+        {/* Navigation Menu */}
+        <div className="flex-1 py-4 px-1">
+          <div className="space-y-1">
+            {menuItems.map((item) => (
+              <Tooltip
+                key={item.key}
+                title={isCollapsed ? item.label : ""}
+                placement="right"
+                overlayClassName="sidebar-tooltip"
+              >
+                <div
+                  onClick={() => handleMenuClick({ key: item.key })}
+                  className={`group relative flex items-center cursor-pointer transition-all duration-200 ${
+                    isCollapsed
+                      ? "justify-center p-3 mx-2 rounded-lg"
+                      : "gap-3 px-3 py-3 mx-1 rounded-lg"
+                  } ${
+                    selectedKey === item.key
+                      ? "bg-blue-600 text-white shadow-md"
+                      : "text-blue-700 hover:bg-blue-100 hover:text-blue-800"
+                  }`}
                 >
-                  <LogoutOutlined />
-                  <span>Logout</span>
-                </button>
-              </li>
-            </ul>
+                  <span
+                    className={`text-lg flex-shrink-0 ${
+                      selectedKey === item.key ? "text-white" : ""
+                    }`}
+                  >
+                    {item.icon}
+                  </span>
+                  {!isCollapsed && (
+                    <span
+                      className={`whitespace-nowrap font-medium ${
+                        selectedKey === item.key ? "text-white" : ""
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                  )}
+                </div>
+              </Tooltip>
+            ))}
           </div>
-        )}
+        </div>
+
+        {/* Profile Section */}
+        <div className="p-4 border-t border-blue-200">
+          <Dropdown
+            menu={{
+              items: profileMenuItems,
+              onClick: ({ key }) => {
+                if (key === "logout") {
+                  window.location.href = "/login";
+                }
+              },
+            }}
+            trigger={["click"]}
+            placement={isCollapsed ? "topRight" : "top"}
+            overlayClassName="profile-dropdown"
+          >
+            <div
+              className={`flex items-center cursor-pointer hover:bg-blue-100 transition-all duration-200 rounded-lg ${
+                isCollapsed ? "justify-center p-3" : "gap-3 p-3"
+              }`}
+            >
+              <Avatar
+                size={isCollapsed ? 32 : 40}
+                icon={<UserOutlined />}
+                className="bg-blue-600 text-white flex-shrink-0 shadow-md"
+              />
+              {!isCollapsed && (
+                <div className="flex flex-col text-blue-700 overflow-hidden">
+                  <span className="text-sm font-semibold truncate">
+                    John Doe
+                  </span>
+                  <span className="text-xs text-blue-500 truncate opacity-80">
+                    Administrator
+                  </span>
+                </div>
+              )}
+            </div>
+          </Dropdown>
+        </div>
       </div>
-    </div>
+
+      <style jsx>{`
+        .sidebar-tooltip .ant-tooltip-inner {
+          background: #1e40af;
+          color: white;
+          font-weight: 500;
+          border-radius: 6px;
+        }
+
+        .sidebar-tooltip .ant-tooltip-arrow::before {
+          background: #1e40af;
+        }
+
+        .profile-dropdown .ant-dropdown-menu {
+          background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+          border: 1px solid #cbd5e1;
+          border-radius: 12px;
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+          backdrop-filter: blur(10px);
+        }
+
+        .profile-dropdown .ant-dropdown-menu-item {
+          color: #334155;
+          padding: 10px 16px;
+          border-radius: 8px;
+          margin: 4px;
+          transition: all 0.2s ease;
+        }
+
+        .profile-dropdown .ant-dropdown-menu-item:hover {
+          background-color: #e2e8f0;
+          color: #1e40af;
+        }
+
+        .profile-dropdown .ant-dropdown-menu-divider {
+          border-color: #cbd5e1;
+          margin: 8px 4px;
+        }
+
+        /* Scrollbar styling for the sidebar */
+        .ant-layout-sider::-webkit-scrollbar {
+          width: 4px;
+        }
+
+        .ant-layout-sider::-webkit-scrollbar-track {
+          background: rgba(59, 130, 246, 0.1);
+          border-radius: 2px;
+        }
+
+        .ant-layout-sider::-webkit-scrollbar-thumb {
+          background: rgba(59, 130, 246, 0.3);
+          border-radius: 2px;
+        }
+
+        .ant-layout-sider::-webkit-scrollbar-thumb:hover {
+          background: rgba(59, 130, 246, 0.5);
+        }
+      `}</style>
+    </Sider>
   );
 }
 
