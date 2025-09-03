@@ -6,6 +6,9 @@ import {
 } from "react-router-dom";
 import Login from "./modules/login/login.jsx";
 import Main from "./modules/main/main.jsx";
+import Users from "./modules/users/users.jsx";
+import AnnouncementDetail from "./modules/users/announcementdetail.jsx"; 
+import Admin from "./modules/admin/admin.jsx";
 
 function App() {
   return (
@@ -19,6 +22,16 @@ function App() {
 
         {/* Main Route */}
         <Route path="/main" element={<Main />} />
+
+        {/* Users Route */}
+        <Route path="/users" element={<Users />} />
+
+        {/* Admin Route */}
+        <Route path="/admin" element={<Admin />} />
+
+        {/* ✅ Detail Route */}
+      <Route path="/announcement/:title" element={<AnnouncementDetail />} />
+
       </Routes>
     </Router>
   );
