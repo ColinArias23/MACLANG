@@ -9,6 +9,8 @@ import {
   Popconfirm,
   Pagination,
   Select,
+  message as antMessage,
+  notification,
 } from "antd";
 import {
   EditOutlined,
@@ -21,6 +23,8 @@ import {
   ShareAltOutlined,
   CloseOutlined,
   SendOutlined,
+  ReloadOutlined,
+  SyncOutlined,
 } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
@@ -28,36 +32,98 @@ const { TextArea } = Input;
 const { Option } = Select;
 
 const InboxInterface = () => {
+  const [count, setCount] = useState(0);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isReloading, setIsReloading] = useState(false);
+  const [api, contextHolder] = notification.useNotification();
   const [activeTab, setActiveTab] = useState("all");
   const [isComposeOpen, setIsComposeOpen] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [composeData, setComposeData] = useState({
     subject: "",
     message: "",
-    department: "", // ✅ fixed lowercase
+    department: "",
   });
-  const [messages, setMessages] = useState([
-    {
-      id: 1,
-      sender: "Admin",
-      subject: "Welcome to the platform",
-      content: "This is a sample announcement.",
-      email: "admin@example.com",
-      isPinned: true,
-      date: "Aug 31, 2025",
-      type: "direct",
-    },
-    {
-      id: 2,
-      sender: "System",
-      subject: "Update completed",
-      content: "The system update was successfully installed.",
-      email: "system@example.com",
-      isPinned: false,
-      date: "Aug 30, 2025",
-      type: "all",
-    },
-  ]);
+  const getInitialMessages = () => {
+    const saved = localStorage.getItem("inboxMessages");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return [];
+      }
+    }
+    return [
+      {
+        id: 1,
+        sender: "Admin",
+        subject: "Welcome to the platform",
+        content: "This is a sample announcement.",
+        email: "admin@example.com",
+        isPinned: true,
+        date: "Aug 31, 2025",
+        department: "All",
+      },
+      {
+        id: 2,
+        sender: "System",
+        subject: "Update completed",
+        content: "The system update was successfully installed.",
+        email: "system@example.com",
+        isPinned: false,
+        date: "Aug 30, 2025",
+        department: "All",
+      },
+    ];
+  };
+
+  const handleReloadClick = () => {
+    if (isReloading) return; // prevent multiple clicks
+    setIsReloading(true);
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000); // 1 second spin animation before reload
+  };
+
+  const [messages, setMessages] = useState(getInitialMessages);
+  const listRef = useRef(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+
+    if (!value.trim()) {
+      setActiveTab("all");
+      return;
+    }
+
+    // Check filtered messages to decide which tab to activate
+    const lowerSearch = value.toLowerCase();
+
+    // Filter messages based on search including department, subject, sender
+    const searchFiltered = messages.filter((msg) => {
+      return (
+        msg.subject.toLowerCase().includes(lowerSearch) ||
+        msg.sender.toLowerCase().includes(lowerSearch) ||
+        (msg.department && msg.department.toLowerCase().includes(lowerSearch))
+      );
+    });
+
+    // Decide tab based on filtered results
+    if (searchFiltered.length === 0) {
+      setActiveTab("all"); // no results, fallback to all
+    } else if (searchFiltered.every((msg) => msg.isPinned)) {
+      setActiveTab("pinned");
+    } else if (
+      searchFiltered.some((msg) => msg.department && msg.department !== "All")
+    ) {
+      setActiveTab("department");
+    } else {
+      setActiveTab("all");
+    }
+  };
 
   const departments = [
     "All",
@@ -77,45 +143,65 @@ const InboxInterface = () => {
     { key: "pinned", label: "Pinned", icon: "📌" },
   ];
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(5);
+  useEffect(() => {
+    if (count === 0) {
+      setCount(1);
+    }
+  }, [count]);
+  // 💾 Save to localStorage whenever messages change
+  useEffect(() => {
+    localStorage.setItem("inboxMessages", JSON.stringify(messages));
+  }, [messages]);
 
-  const listRef = useRef(null);
-
+  // Dynamically adjust page size based on height
   useEffect(() => {
     if (!listRef.current) return;
 
+    const observedElement = listRef.current;
+
     const resizeObserver = new ResizeObserver(() => {
-      const containerHeight = listRef.current.clientHeight;
-      const itemHeight = 72; // height per row (px)
+      if (!observedElement) return; // extra guard
+
+      const containerHeight = observedElement.clientHeight;
+      const itemHeight = 72;
       const visibleCount = Math.floor(containerHeight / itemHeight);
       setPageSize(visibleCount > 0 ? visibleCount : 5);
     });
 
-    resizeObserver.observe(listRef.current);
-    return () => resizeObserver.disconnect();
+    resizeObserver.observe(observedElement);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
   }, []);
 
-  // Filters
+  const sortedMessages = [...messages].sort(
+    (a, b) => new Date(b.date) - new Date(a.date)
+  );
+
+  // Filter messages based on activeTab
   const filteredMessages = messages.filter((msg) => {
     if (activeTab === "department") {
-      return msg.department && msg.department !== "All"; // ✅ only dept-specific
+      if (!msg.department || msg.department === "All") return false;
+    } else if (activeTab === "all") {
+      if (msg.department !== "All") return false;
+    } else if (activeTab === "pinned") {
+      if (!msg.isPinned) return false;
     }
-    if (activeTab === "all") {
-      return msg.department === "All"; // ✅ only announcements for all
-    }
-    if (activeTab === "pinned") {
-      return msg.isPinned;
-    }
-    return true;
+
+    if (searchTerm.trim() === "") return true;
+    const lowerSearch = searchTerm.toLowerCase();
+    return (
+      msg.subject.toLowerCase().includes(lowerSearch) ||
+      msg.sender.toLowerCase().includes(lowerSearch) ||
+      (msg.department && msg.department.toLowerCase().includes(lowerSearch))
+    );
   });
 
   const currentIndex = selectedMessage
     ? filteredMessages.findIndex((m) => m.id === selectedMessage.id)
     : 0;
-  const totalMessages = filteredMessages.length;
 
-  // Handlers
   const handleMessageClick = (msg) => setSelectedMessage(msg);
   const handleBackToList = () => setSelectedMessage(null);
   const handleComposeOpen = () => setIsComposeOpen(true);
@@ -139,12 +225,20 @@ const InboxInterface = () => {
         hour: "2-digit",
         minute: "2-digit",
       }),
-      department: composeData.department || "All", // ✅ fallback to All if none selected
+      department: composeData.department || "All",
     };
-
     setMessages([newMessage, ...messages]);
     setIsComposeOpen(false);
     setComposeData({ subject: "", message: "", department: "" });
+    api.success(
+      {
+        message: "Success!",
+        description: "Your message has been posted successfully.",
+        placement: "topRight",
+        duration: 4,
+      },
+      []
+    );
   };
 
   const handleDelete = (id) => {
@@ -167,6 +261,7 @@ const InboxInterface = () => {
 
   return (
     <div className="w-full h-full flex flex-col">
+      {contextHolder}
       <Card
         className="shadow-xl border-0 rounded-xl overflow-hidden flex flex-col w-full h-full 
                    [&>.ant-card-body]:flex [&>.ant-card-body]:flex-col 
@@ -175,7 +270,8 @@ const InboxInterface = () => {
         {!selectedMessage ? (
           <>
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0">
+            <div className="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0 gap-4">
+              {/* Tabs */}
               <div className="flex border-b-0">
                 {tabs.map((tab) => (
                   <button
@@ -184,7 +280,7 @@ const InboxInterface = () => {
                       setActiveTab(tab.key);
                       setCurrentPage(1);
                     }}
-                    className={`flex items-center gap-2 px-6 py-2 font-medium transition-all duration-200 cursor-pointer ${
+                    className={`flex items-center gap-2 px-4 py-2 font-medium transition-all duration-200 cursor-pointer ${
                       activeTab === tab.key
                         ? "text-blue-600 border-b-2 border-blue-500 bg-blue-50"
                         : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
@@ -195,14 +291,32 @@ const InboxInterface = () => {
                   </button>
                 ))}
               </div>
-              <Button
-                type="primary"
-                icon={<EditOutlined />}
-                onClick={handleComposeOpen}
-                className="bg-indigo-600 hover:bg-indigo-700 border-0"
-              >
-                Post
-              </Button>
+
+              {/* Right side: Reload, Search, Post */}
+              <div className="flex items-center gap-3">
+                <Button
+                  icon={<SyncOutlined spin={isReloading} />}
+                  onClick={handleReloadClick}
+                  title="Reload messages"
+                  className="border border-gray-300 hover:border-gray-400"
+                />
+                <Input.Search
+                  placeholder="Search messages"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                  allowClear
+                  className="w-64"
+                  enterButton={false}
+                />
+                <Button
+                  type="primary"
+                  icon={<EditOutlined />}
+                  onClick={handleComposeOpen}
+                  className="bg-indigo-600 hover:bg-indigo-700 border-0"
+                >
+                  Post
+                </Button>
+              </div>
             </div>
 
             {/* Messages List */}
@@ -318,7 +432,7 @@ const InboxInterface = () => {
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-500">
                 <span>
-                  {currentIndex + 1} of {totalMessages}
+                  {currentIndex + 1} of {filteredMessages.length}
                 </span>
                 <Button type="text" icon={<LeftOutlined />} size="small" />
                 <Button type="text" icon={<RightOutlined />} size="small" />

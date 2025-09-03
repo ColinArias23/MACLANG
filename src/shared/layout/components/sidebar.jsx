@@ -114,10 +114,14 @@ function Sidebar({ isCollapsed, setIsCollapsed }) {
                 src={Maclang}
                 alt="RMBGH Logo"
                 className={`object-contain transition-all duration-300 ${
-                  isCollapsed ? "w-10 h-10" : "w-16 h-16"
+                  isCollapsed ? "w-10 h-10" : "w-30 h-30"
                 }`}
               />
             </div>
+            {/* Conditional rendering for the text */}
+            {!isCollapsed && (
+              <div className="ml-4 text-lg font-semibold">RMBGH</div>
+            )}
           </div>
         </div>
 
@@ -129,7 +133,7 @@ function Sidebar({ isCollapsed, setIsCollapsed }) {
                 key={item.key}
                 title={isCollapsed ? item.label : ""}
                 placement="right"
-                overlayClassName="sidebar-tooltip"
+                classNames={{ popper: "sidebar-tooltip" }}
               >
                 <div
                   onClick={() => handleMenuClick({ key: item.key })}
@@ -178,7 +182,7 @@ function Sidebar({ isCollapsed, setIsCollapsed }) {
             }}
             trigger={["click"]}
             placement={isCollapsed ? "topRight" : "top"}
-            overlayClassName="profile-dropdown"
+            classNames={{ popper: "profile-dropdown" }}
           >
             <div
               className={`flex items-center cursor-pointer hover:bg-blue-100 transition-all duration-200 rounded-lg ${
@@ -205,7 +209,7 @@ function Sidebar({ isCollapsed, setIsCollapsed }) {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .sidebar-tooltip .ant-tooltip-inner {
           background: #1e40af;
           color: white;
