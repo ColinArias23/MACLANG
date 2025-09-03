@@ -1,473 +1,470 @@
 import React, { useState } from "react";
+import { Card, Avatar, Button, Typography, Modal, Input, Select } from "antd";
 import {
-  Card,
-  Avatar,
-  Button,
-  Input,
-  Space,
-  Typography,
-  Badge,
-  Divider,
-  Tag,
-  Modal,
-} from "antd";
-import {
-  PictureOutlined,
-  VideoCameraOutlined,
-  LinkOutlined,
-  FileTextOutlined,
-  CalendarOutlined,
+  InboxOutlined,
+  GlobalOutlined,
   PushpinOutlined,
-  MoreOutlined,
-  EyeOutlined,
+  EditOutlined,
+  ArrowLeftOutlined,
+  StarOutlined,
+  DeleteOutlined,
+  ClockCircleOutlined,
+  LeftOutlined,
+  RightOutlined,
   ShareAltOutlined,
   SendOutlined,
   CloseOutlined,
+  PictureOutlined,
+  PlayCircleOutlined,
+  LinkOutlined,
+  FileTextOutlined,
+  CalendarOutlined,
+  MoreOutlined,
+  BoldOutlined,
+  ItalicOutlined,
+  UnderlineOutlined,
 } from "@ant-design/icons";
 
 const { Text, Title } = Typography;
 const { TextArea } = Input;
+const { Option } = Select;
 
-function Content() {
-  const [postContent, setPostContent] = useState("");
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedPost, setSelectedPost] = useState(null);
-  const [replyContent, setReplyContent] = useState("");
-  const [isReplying, setIsReplying] = useState(false);
-  const [isForwarding, setIsForwarding] = useState(false);
-  const [forwardTo, setForwardTo] = useState("");
+function InboxInterface() {
+  const [activeTab, setActiveTab] = useState("All");
+  const [selectedMessage, setSelectedMessage] = useState(null);
+  const [isComposeOpen, setIsComposeOpen] = useState(false);
+  const [composeData, setComposeData] = useState({
+    to: "",
+    subject: "",
+    message: "",
+  });
 
   const announcements = [
     {
       id: 1,
-      author: "Sharmaine Dy Banquiles",
-      role: "General",
-      title: "Welcome to RMBGH Intranet Portal",
-      content:
-        "We're glad to have you here. This platform is designed to keep you connected, informed, and empowered.\n\nThrough the intranet, you can easily access company updates, announcements, resources, and tools to support your work every day.\n\nTake a moment to explore the features available and stay engaged with the latest happenings at RMBGH. Together, let's continue building a workplace that thrives on collaboration, innovation, and excellence.\n\nYour journey with RMBGH starts here—welcome aboard!",
+      sender: "Sharmaine Dy Banquiles",
+      email: "sharmaine@rmbgh.com",
+      subject: "Welcome to RMBGH Intranet Portal!",
+      date: "Aug 29",
       isPinned: true,
-      hasViewPost: true,
-      date: "Aug 29, 2024  9:00 AM",
-      subject: "Welcome to RMBGH Intranet Portal",
+      content: `Hi,
+
+We are delighted to welcome all employees to the official RMBGH Intranet — your one-stop digital workplace. This platform is designed to make communication, collaboration, and access to important resources easier than ever before.
+
+Here, you will find company announcements, policies, forms, and updates all in one convenient location. The intranet also provides tools that will help you stay informed about upcoming events, internal programs, and organizational changes.
+
+More than just a communication channel, the RMBGH Intranet is a space for collaboration and knowledge sharing. Whether you are looking for quick access to HR resources, staying up to date with departmental news, or connecting with colleagues across teams, this platform is built with you in mind.`,
     },
     {
       id: 2,
-      author: "Colin Arias",
-      role: "General",
-      title: "The Purpose of the RMBGH Intranet",
-      content:
-        "The RMBGH Intranet has been launched to serve as the central hub for all employees. This platform will streamline communication, enhance collaboration, and provide easy access to important company resources.\n\nKey features include:\n- Real-time announcements and updates\n- Document sharing and collaboration\n- Employee directory and contact information\n- Project management tools\n- Knowledge base and FAQs\n\nWe encourage all team members to actively participate and make the most of this new communication platform.",
-      isPinned: true,
-      hasViewPost: true,
-      date: "Aug 28, 2024  2:30 PM",
-      subject: "The Purpose of the RMBGH Intranet",
+      sender: "Colin Arias",
+      email: "colin@rmbgh.com",
+      subject: "Welcome to RMBGH Intranet Portal!",
+      date: "Aug 29",
+      isPinned: false,
+      content: `Dear Team,
+
+Welcome to our new digital workplace! This intranet portal will serve as your central hub for all company communications and resources.
+
+Please take some time to explore the various features and let us know if you have any questions.
+
+Best regards,
+Colin Arias`,
     },
     {
       id: 3,
-      author: "Firstname Lastname",
-      role: "General",
-      title: "Support Activity",
-      content:
-        "Please contact IT support for any technical issues or assistance needed with the new intranet portal. Our support team is available Monday to Friday, 8:00 AM to 5:00 PM.",
+      sender: "Announcement 1",
+      email: "announcements@rmbgh.com",
+      subject: "Welcome to RMBGH Intranet Portal!",
+      date: "Aug 29",
       isPinned: false,
-      hasViewPost: true,
-      date: "Aug 27, 2024  10:15 AM",
-      subject: "Support Activity",
+      content: "System announcement regarding the new intranet portal launch.",
     },
-  ];
-
-  const posts = [
     {
-      id: 1,
-      author: "Colin Arias",
-      role: "IT Admin",
-      date: "Aug 30, 2024  5:00 AM",
-      subject: "The Purpose of RMBGH Intranet",
-      content:
-        "We're glad to have you here. This platform is designed to keep you connected, informed, and empowered.\n\nThrough the intranet, you can easily access company updates, announcements, resources, and tools to support your work every day.\n\nTake a moment to explore the features available and stay engaged with the latest happenings at RMBGH. Together, let's continue building a workplace that thrives on collaboration, innovation, and excellence.\n\nYour journey with RMBGH starts here—welcome aboard!",
-      isViewFullPost: true,
+      id: 4,
+      sender: "Announcement 2",
+      email: "announcements@rmbgh.com",
+      subject: "Welcome to RMBGH Intranet Portal!",
+      date: "Aug 29",
+      isPinned: false,
+      content: "Additional information about the intranet portal features.",
+    },
+    {
+      id: 5,
+      sender: "Announcement 3",
+      email: "announcements@rmbgh.com",
+      subject: "Welcome to RMBGH Intranet Portal!",
+      date: "Aug 29",
+      isPinned: false,
+      content: "Guidelines for using the new intranet portal effectively.",
+    },
+    {
+      id: 6,
+      sender: "Announcement 4",
+      email: "announcements@rmbgh.com",
+      subject: "Welcome to RMBGH Intranet Portal!",
+      date: "Aug 29",
+      isPinned: false,
+      content: "Training schedule for the new intranet portal.",
+    },
+    {
+      id: 7,
+      sender: "Announcement 5",
+      email: "announcements@rmbgh.com",
+      subject: "Welcome to RMBGH Intranet Portal!",
+      date: "Aug 29",
+      isPinned: false,
+      content: "FAQ section for the intranet portal.",
+    },
+    {
+      id: 8,
+      sender: "Announcement 6",
+      email: "announcements@rmbgh.com",
+      subject: "Welcome to RMBGH Intranet Portal!",
+      date: "Aug 29",
+      isPinned: false,
+      content: "Technical support information for the intranet portal.",
     },
   ];
 
-  const handleViewPost = (post) => {
-    setSelectedPost(post);
-    setIsModalVisible(true);
-    setIsReplying(false);
-    setIsForwarding(false);
-    setReplyContent("");
-    setForwardTo("");
+  const tabs = [
+    { key: "Direct", label: "Direct", icon: <InboxOutlined /> },
+    { key: "All", label: "All", icon: <GlobalOutlined /> },
+    { key: "Pinned", label: "Pinned", icon: <PushpinOutlined /> },
+  ];
+
+  const filteredAnnouncements = announcements.filter((announcement) => {
+    if (activeTab === "Pinned") return announcement.isPinned;
+    return true;
+  });
+
+  const handleMessageClick = (message) => {
+    setSelectedMessage(message);
   };
 
-  const handleCloseModal = () => {
-    setIsModalVisible(false);
-    setSelectedPost(null);
-    setIsReplying(false);
-    setIsForwarding(false);
-    setReplyContent("");
-    setForwardTo("");
+  const handleBackToList = () => {
+    setSelectedMessage(null);
   };
 
-  const handleReply = () => {
-    setIsReplying(true);
-    setIsForwarding(false);
+  const handleComposeOpen = () => {
+    setIsComposeOpen(true);
   };
 
-  const handleForward = () => {
-    setIsForwarding(true);
-    setIsReplying(false);
+  const handleComposeClose = () => {
+    setIsComposeOpen(false);
+    setComposeData({ to: "", subject: "", message: "" });
   };
 
-  const handleSendReply = () => {
-    console.log("Sending reply:", replyContent);
-    setReplyContent("");
-    setIsReplying(false);
+  const handleComposeChange = (field, value) => {
+    setComposeData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSendForward = () => {
-    console.log("Forwarding to:", forwardTo);
-    setForwardTo("");
-    setIsForwarding(false);
+  const handleSend = () => {
+    console.log("Sending message:", composeData);
+    handleComposeClose();
   };
+
+  const currentIndex = selectedMessage
+    ? announcements.findIndex((a) => a.id === selectedMessage.id)
+    : -1;
+  const totalMessages = announcements.length;
 
   return (
-    <div className="flex-1 p-6 ml-0">
-      <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6 flex flex-col gap-4">
-            <Card className="shadow-lg border-0">
-              <div className="flex gap-3">
-                <Avatar
-                  size={48}
-                  src="https://via.placeholder.com/48x48/4F46E5/FFFFFF?text=U"
-                  className="flex-shrink-0"
-                />
-                <div className="flex-1">
-                  <TextArea
-                    placeholder="Create Announcement"
-                    value={postContent}
-                    onChange={(e) => setPostContent(e.target.value)}
-                    className="border-0 shadow-none resize-none"
-                    style={{ backgroundColor: "transparent" }}
-                    autoSize={{ minRows: 2, maxRows: 4 }}
-                  />
-
-                  <div className="flex items-center justify-between mt-4">
-                    <Space size={16}>
-                      <Button
-                        type="text"
-                        icon={<PictureOutlined />}
-                        className="flex items-center gap-1 text-gray-600 hover:text-blue-600"
-                        size="small"
-                      >
-                        Photo
-                      </Button>
-                      <Button
-                        type="text"
-                        icon={<VideoCameraOutlined />}
-                        className="flex items-center gap-1 text-gray-600 hover:text-blue-600"
-                        size="small"
-                      >
-                        Video
-                      </Button>
-                      <Button
-                        type="text"
-                        icon={<LinkOutlined />}
-                        className="flex items-center gap-1 text-gray-600 hover:text-blue-600"
-                        size="small"
-                      >
-                        Link
-                      </Button>
-                      <Button
-                        type="text"
-                        icon={<FileTextOutlined />}
-                        className="flex items-center gap-1 text-gray-600 hover:text-blue-600"
-                        size="small"
-                      >
-                        Document
-                      </Button>
-                      <Button
-                        type="text"
-                        icon={<CalendarOutlined />}
-                        className="flex items-center gap-1 text-gray-600 hover:text-blue-600"
-                        size="small"
-                      >
-                        Event
-                      </Button>
-                    </Space>
-
-                    <Button
-                      type="primary"
-                      className="bg-blue-600 hover:bg-blue-700 border-blue-600"
+    <div className="h-screen w-full overflow-y-hidden p-2 bg-blue-200">
+      <div>
+        <Card
+          className={`shadow-xl border-0 rounded-xl overflow-auto scrollbar-hide bg-white flex flex-col ${
+            selectedMessage ? "h-157 mx-4" : "h-157"
+          }`}
+        >
+          {!selectedMessage ? (
+            // Message List View
+            <>
+              {/* Header with Compose Button */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0">
+                <div className="flex border-b-0">
+                  {tabs.map((tab) => (
+                    <button
+                      key={tab.key}
+                      onClick={() => setActiveTab(tab.key)}
+                      className={`flex items-center gap-2 px-6 py-2 font-medium transition-all duration-200 cursor-pointer ${
+                        activeTab === tab.key
+                          ? "text-blue-600 border-b-2 border-blue-500 bg-blue-50"
+                          : "text-gray-600 hover:text-gray-800 hover:bg-gray-50"
+                      }`}
                     >
-                      Post
-                    </Button>
-                  </div>
+                      <span className="text-base">{tab.icon}</span>
+                      <span>{tab.label}</span>
+                    </button>
+                  ))}
                 </div>
+                <Button
+                  type="primary"
+                  icon={<EditOutlined />}
+                  onClick={handleComposeOpen}
+                  className="bg-indigo-600 hover:bg-indigo-700 border-0"
+                >
+                  Compose
+                </Button>
               </div>
-            </Card>
 
-            {posts.map((post) => (
-              <Card key={post.id} className="shadow-lg border-0">
-                <div className="flex gap-3">
-                  <Avatar
-                    size={48}
-                    src="https://via.placeholder.com/48x48/4F46E5/FFFFFF?text=CA"
-                    className="flex-shrink-0"
-                  />
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-2">
-                      <div>
-                        <Text strong className="text-gray-900">
-                          {post.author}
-                        </Text>
-                        <div className="flex items-center gap-2 text-gray-500 text-sm mt-1">
-                          <span>{post.role}</span>
-                          <span>•</span>
-                          <span>{post.date}</span>
-                        </div>
-                      </div>
-                      <Button
-                        type="text"
-                        icon={<MoreOutlined />}
-                        className="text-gray-400"
-                      />
-                    </div>
+              {/* Announcements List */}
+              <div className="bg-white flex-1 overflow-y-auto">
+                {filteredAnnouncements.map((announcement) => (
+                  <div
+                    key={announcement.id}
+                    onClick={() => handleMessageClick(announcement)}
+                    className="flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors cursor-pointer border-b border-gray-100 last:border-b-0"
+                  >
+                    <div className="flex items-center gap-4 flex-1">
+                      {/* Blue notification dot */}
+                      <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>
 
-                    <div className="mb-3">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Text className="text-gray-600 text-sm">Sent To:</Text>
-                        <Tag color="default" className="text-xs">
-                          General
-                        </Tag>
-                      </div>
-                      <div className="flex items-center gap-2 mb-3">
-                        <Text className="text-gray-600 text-sm">Subject:</Text>
-                        <Text strong className="text-sm">
-                          {post.subject}
-                        </Text>
-                      </div>
-                    </div>
-
-                    <div className="text-gray-700 text-sm leading-relaxed mb-4 whitespace-pre-line">
-                      {post.content.length > 200
-                        ? `${post.content.substring(0, 200)}...`
-                        : post.content}
-                    </div>
-
-                    {post.isViewFullPost && (
-                      <Button
-                        type="link"
-                        className="flex items-center gap-1 text-blue-600 text-sm p-0"
-                        onClick={() => handleViewPost(post)}
-                      >
-                        <EyeOutlined />
-                        <span>View Full Post</span>
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-
-          <div className="space-y-4">
-            <Card
-              className="shadow-lg border-0"
-              title={
-                <div className="flex items-center gap-2 text-blue-600">
-                  <PushpinOutlined />
-                  <span>Pinned Announcement</span>
-                </div>
-              }
-              headStyle={{
-                borderBottom: "2px solid #3b82f6",
-                fontSize: "16px",
-                fontWeight: 600,
-              }}
-            >
-              <div className="space-y-4">
-                {announcements.map((announcement) => (
-                  <div key={announcement.id}>
-                    <div className="flex gap-3 mb-3">
-                      <Avatar
-                        size={32}
-                        src={`https://via.placeholder.com/32x32/4F46E5/FFFFFF?text=${announcement.author.charAt(
-                          0
-                        )}`}
-                        className="flex-shrink-0"
-                      />
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between">
-                          <Text strong className="text-sm text-gray-900">
-                            {announcement.author}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Text className="font-medium text-gray-900 text-sm">
+                            {announcement.sender}
                           </Text>
-                          <Button
-                            type="text"
-                            icon={<MoreOutlined />}
-                            size="small"
-                            className="text-gray-400"
-                          />
+                          {announcement.isPinned && (
+                            <PushpinOutlined className="text-orange-500 text-xs" />
+                          )}
                         </div>
-                        <div className="flex items-center gap-1 mt-1">
-                          <Badge color="gray" />
-                          <Text className="text-xs text-gray-500">
-                            {announcement.role}
-                          </Text>
-                        </div>
+                        <Text className="text-gray-700 text-sm block truncate">
+                          {announcement.subject}
+                        </Text>
                       </div>
                     </div>
 
-                    <div className="ml-11">
-                      <Title
-                        level={5}
-                        className="text-gray-900 mb-2 !text-sm !font-semibold"
-                      >
-                        {announcement.title}
-                      </Title>
-                      {announcement.content && (
-                        <Text className="text-xs text-gray-600 leading-relaxed">
-                          {announcement.content.length > 100
-                            ? `${announcement.content.substring(0, 100)}...`
-                            : announcement.content}
-                        </Text>
-                      )}
-                      {announcement.hasViewPost && (
-                        <Button
-                          type="link"
-                          className="flex items-center gap-1 text-blue-600 text-xs mt-2 p-0"
-                          onClick={() => handleViewPost(announcement)}
-                        >
-                          <EyeOutlined />
-                          <span>View Post</span>
-                        </Button>
-                      )}
+                    <div className="text-gray-500 text-sm ml-4">
+                      {announcement.date}
                     </div>
-
-                    {announcement.id !==
-                      announcements[announcements.length - 1].id && (
-                      <Divider className="my-4" />
-                    )}
                   </div>
                 ))}
               </div>
-            </Card>
-          </div>
-        </div>
-      </div>
+            </>
+          ) : (
+            // Message Detail View
+            <div className="flex-1 flex flex-col overflow-hidden">
+              <div className="flex items-center justify-between p-4 border-b border-gray-200 flex-shrink-0">
+                <div className="flex items-center gap-3">
+                  <Button
+                    type="text"
+                    icon={<ArrowLeftOutlined />}
+                    onClick={handleBackToList}
+                    className="text-gray-500 hover:text-gray-700"
+                  />
+                  <Button
+                    type="text"
+                    icon={<StarOutlined />}
+                    className="text-gray-500 hover:text-yellow-500"
+                  />
+                  <Button
+                    type="text"
+                    icon={<DeleteOutlined />}
+                    className="text-gray-500 hover:text-red-500"
+                  />
+                  <Button
+                    type="text"
+                    icon={<ClockCircleOutlined />}
+                    className="text-gray-500 hover:text-gray-700"
+                  />
+                </div>
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <span>
+                    {currentIndex + 1} of {totalMessages}
+                  </span>
+                  <Button type="text" icon={<LeftOutlined />} size="small" />
+                  <Button type="text" icon={<RightOutlined />} size="small" />
+                </div>
+              </div>
 
-      <Modal
-        title={null}
-        open={isModalVisible}
-        onCancel={handleCloseModal}
-        footer={null}
-        width={800}
-        className="post-modal"
-        closeIcon={<CloseOutlined />}
-      >
-        {selectedPost && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between pb-4 border-b">
-              <div className="flex items-center gap-3">
-                <Avatar
-                  size={48}
-                  src={`https://via.placeholder.com/48x48/4F46E5/FFFFFF?text=${selectedPost.author.charAt(
-                    0
-                  )}`}
-                />
-                <div>
-                  <Text strong className="text-lg">
-                    {selectedPost.subject || selectedPost.title}
-                  </Text>
-                  <div className="text-gray-500 text-sm">
-                    From:{" "}
-                    <span className="font-medium">{selectedPost.author}</span>
-                    <span className="mx-2">•</span>
-                    {selectedPost.date}
+              {/* Message Content */}
+              <div className="flex-1 overflow-y-auto p-6">
+                <div className="mb-6">
+                  <div className="flex items-start gap-4">
+                    <Avatar
+                      size={48}
+                      className="bg-gray-400 text-white font-medium flex-shrink-0"
+                    >
+                      {selectedMessage.sender.charAt(0)}
+                    </Avatar>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-2">
+                        <Title
+                          level={4}
+                          className="!mb-0 !text-lg font-semibold text-gray-900"
+                        >
+                          {selectedMessage.sender}
+                        </Title>
+                      </div>
+                      <Text className="text-sm text-gray-500 block mb-1">
+                        {selectedMessage.email}
+                      </Text>
+                      <div className="flex items-center gap-2 text-sm text-gray-500">
+                        <Text>To:</Text>
+                        <Text>All</Text>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            <div className="py-4">
-              <div className="text-gray-700 leading-relaxed whitespace-pre-line">
-                {selectedPost.content}
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 py-3 border-t">
-              <Button
-                icon={<SendOutlined />}
-                onClick={handleReply}
-                className={
-                  isReplying ? "bg-blue-50 text-blue-600 border-blue-300" : ""
-                }
-              >
-                Reply
-              </Button>
-              <Button
-                icon={<ShareAltOutlined />}
-                onClick={handleForward}
-                className={
-                  isForwarding ? "bg-blue-50 text-blue-600 border-blue-300" : ""
-                }
-              >
-                Forward
-              </Button>
-            </div>
-
-            {isReplying && (
-              <div className="space-y-3 pt-4 border-t">
-                <div className="text-sm text-gray-600">
-                  Replying to:{" "}
-                  <span className="font-medium">{selectedPost.author}</span>
-                </div>
-                <TextArea
-                  placeholder="Write your reply..."
-                  value={replyContent}
-                  onChange={(e) => setReplyContent(e.target.value)}
-                  rows={4}
-                  className="resize-none"
-                />
-                <div className="flex items-center gap-2">
-                  <Button
-                    type="primary"
-                    icon={<SendOutlined />}
-                    onClick={handleSendReply}
-                    disabled={!replyContent.trim()}
+                {/* Subject */}
+                <div className="mb-6">
+                  <Text className="text-sm text-gray-500 block mb-1">
+                    Subject
+                  </Text>
+                  <Title
+                    level={4}
+                    className="!mb-0 !text-base font-semibold text-gray-900"
                   >
-                    Send Reply
-                  </Button>
-                  <Button onClick={() => setIsReplying(false)}>Cancel</Button>
+                    {selectedMessage.subject}
+                  </Title>
                 </div>
-              </div>
-            )}
 
-            {isForwarding && (
-              <div className="space-y-3 pt-4 border-t">
-                <div className="text-sm text-gray-600 mb-2">Forward to:</div>
-                <Input
-                  placeholder="Enter recipient email or name..."
-                  value={forwardTo}
-                  onChange={(e) => setForwardTo(e.target.value)}
-                />
-                <div className="flex items-center gap-2">
+                {/* Message Content */}
+                <div className="mb-6">
+                  <div className="text-gray-700 leading-relaxed whitespace-pre-line">
+                    {selectedMessage.content}
+                  </div>
+                </div>
+
+                {/* Forward Button */}
+                <div className="pt-4 border-t border-gray-200">
                   <Button
-                    type="primary"
                     icon={<ShareAltOutlined />}
-                    onClick={handleSendForward}
-                    disabled={!forwardTo.trim()}
+                    className="text-gray-600 hover:text-blue-600"
                   >
                     Forward
                   </Button>
-                  <Button onClick={() => setIsForwarding(false)}>Cancel</Button>
                 </div>
               </div>
-            )}
+            </div>
+          )}
+        </Card>
+
+        {/* Compose Modal */}
+        <Modal
+          open={isComposeOpen}
+          onCancel={handleComposeClose}
+          footer={null}
+          width={1000}
+          closable={true}
+          closeIcon={<CloseOutlined />}
+          className="compose-modal-custom"
+          centered
+        >
+          <div className="p-6">
+            {/* To Field */}
+            <div className="mb-4">
+              <div className="flex items-center gap-4 py-4 border-b border-gray-200">
+                <label className="text-sm text-gray-600 w-20 flex-shrink-0 font-medium">
+                  Send to
+                </label>
+                <div className="flex gap-2 flex-wrap flex-1">
+                  <span className="inline-flex items-center px-4 py-2 rounded-full text-sm bg-blue-500 text-white shadow-sm">
+                    sharmainedybanquiles@example.com
+                  </span>
+                  <span className="inline-flex items-center px-4 py-2 rounded-full text-sm bg-blue-500 text-white shadow-sm">
+                    colinarias@example.com
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Subject Field */}
+            <div className="mb-4">
+              <div className="flex items-center gap-4 py-4 border-b border-gray-200">
+                <label className="text-sm text-gray-600 w-20 flex-shrink-0 font-medium">
+                  Subject
+                </label>
+                <Input
+                  placeholder="Enter subject"
+                  value={composeData.subject}
+                  onChange={(e) =>
+                    handleComposeChange("subject", e.target.value)
+                  }
+                  className="flex-1 border-0 p-0 focus:shadow-none text-base"
+                  style={{ boxShadow: "none" }}
+                />
+              </div>
+            </div>
+
+            {/* Message Field */}
+            <div className="mb-6">
+              <TextArea
+                placeholder="Type your message here..."
+                value={composeData.message}
+                onChange={(e) => handleComposeChange("message", e.target.value)}
+                rows={12}
+                className="w-full border-2 border-gray-200 rounded-lg p-4 resize-none focus:border-blue-400 transition-all text-base"
+                style={{ outline: "none", boxShadow: "none" }}
+              />
+            </div>
+
+            {/* Formatting and Action Bar */}
+            <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+              {/* Text Formatting and Attachments */}
+              <div className="flex items-center gap-2">
+                {/* Text Formatting */}
+                <button className="w-9 h-9 rounded-lg border border-gray-300 bg-white hover:bg-gray-600 text-gray-700 hover:text-white shadow-sm transition-all duration-200 flex items-center justify-center cursor-pointer">
+                  <BoldOutlined className="text-base" />
+                </button>
+                <button className="w-9 h-9 rounded-lg border border-gray-300 bg-white hover:bg-gray-600 text-gray-700 hover:text-white shadow-sm transition-all duration-200 flex items-center justify-center cursor-pointer">
+                  <ItalicOutlined className="text-base" />
+                </button>
+                <button className="w-9 h-9 rounded-lg border border-gray-300 bg-white hover:bg-gray-600 text-gray-700 hover:text-white shadow-sm transition-all duration-200 flex items-center justify-center cursor-pointer">
+                  <UnderlineOutlined className="text-base" />
+                </button>
+
+                {/* Divider */}
+                <div className="w-px h-8 bg-gray-300 mx-3"></div>
+
+                {/* Attachment Options */}
+                <button className="h-9 px-3 rounded-lg border border-orange-200 bg-orange-50 hover:bg-orange-500 text-orange-600 hover:text-white shadow-sm transition-all duration-200 flex items-center gap-2 cursor-pointer">
+                  <PictureOutlined className="text-base" />
+                  <span className="text-sm font-medium">Photo</span>
+                </button>
+                <button className="h-9 px-3 rounded-lg border border-purple-200 bg-purple-50 hover:bg-purple-500 text-purple-600 hover:text-white shadow-sm transition-all duration-200 flex items-center gap-2 cursor-pointer">
+                  <PlayCircleOutlined className="text-base" />
+                  <span className="text-sm font-medium">Video</span>
+                </button>
+                <button className="h-9 px-3 rounded-lg border border-blue-200 bg-blue-50 hover:bg-blue-500 text-blue-600 hover:text-white shadow-sm transition-all duration-200 flex items-center gap-2 cursor-pointer">
+                  <LinkOutlined className="text-base" />
+                  <span className="text-sm font-medium">Link</span>
+                </button>
+                <button className="h-9 px-3 rounded-lg border border-green-200 bg-green-50 hover:bg-green-500 text-green-600 hover:text-white shadow-sm transition-all duration-200 flex items-center gap-2 cursor-pointer">
+                  <FileTextOutlined className="text-base" />
+                  <span className="text-sm font-medium">Document</span>
+                </button>
+                <button className="h-9 px-3 rounded-lg border border-red-200 bg-red-50 hover:bg-red-500 text-red-600 hover:text-white shadow-sm transition-all duration-200 flex items-center gap-2 cursor-pointer">
+                  <CalendarOutlined className="text-base" />
+                  <span className="text-sm font-medium">Event</span>
+                </button>
+              </div>
+
+              {/* More Options and Send */}
+              <div className="flex items-center gap-3">
+                <button className="w-9 h-9 rounded-lg border border-gray-200 bg-gray-50 hover:bg-red-500 text-gray-500 hover:text-white shadow-sm transition-all duration-200 flex items-center justify-center cursor-pointer">
+                  <DeleteOutlined className="text-base" />
+                </button>
+                <button className="w-9 h-9 rounded-lg border border-gray-200 bg-gray-50 hover:bg-gray-500 text-gray-500 hover:text-white shadow-sm transition-all duration-200 flex items-center justify-center cursor-pointer">
+                  <MoreOutlined className="text-base" />
+                </button>
+                <Button
+                  type="primary"
+                  onClick={handleSend}
+                  disabled={!composeData.subject || !composeData.message}
+                  className="bg-indigo-600 hover:bg-indigo-700 border-0 ml-2 px-6 h-10 rounded-lg shadow-lg hover:shadow-xl transition-all text-white font-medium"
+                >
+                  Send Message
+                </Button>
+              </div>
+            </div>
           </div>
-        )}
-      </Modal>
+        </Modal>
+      </div>
     </div>
   );
 }
 
-export default Content;
+export default InboxInterface;

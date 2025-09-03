@@ -178,7 +178,7 @@
 
 // export default Sidebar;
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Sidebar from "../../shared/layout/components/sidebar";
 import Content from "../../shared/layout/components/content";
 
@@ -186,14 +186,14 @@ const Main = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
-    <div className="flex min-h-screen">
-      {/* Sidebar */}
+    <div className="min-h-screen bg-gray-50">
+      {/* Sidebar - Already has fixed positioning in its component */}
       <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
 
-      {/* Content */}
+      {/* Content - Adjust padding based on sidebar width */}
       <div
-        className={`flex-1 min-h-screen transition-all duration-300 p-4 bg-gray-50 ${
-          isCollapsed ? "ml-[80px]" : "ml-[250px]"
+        className={`min-h-screen transition-all duration-300 ${
+          isCollapsed ? "pl-[80px]" : "pl-[280px]"
         }`}
       >
         <Content />
