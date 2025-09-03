@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import Maclang from "../../../../images/Maclang.png";
+import Maclang from "../../../images/maclang.png";
 import {
   HomeOutlined,
   ShopOutlined,
