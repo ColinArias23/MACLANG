@@ -12,4 +12,27 @@ body {
   background: rgba(220, 220, 220, 0.2);
 }
 
+/* @keyframes rgbBackground {
+  0% {
+    background-color: #ff0000;
+  }
+  25% {
+    background-color: #00ff00;
+  }
+  50% {
+    background-color: #0000ff;
+  }
+  75% {
+    background-color: #ffff00;
+  }
+  100% {
+    background-color: #ff0000;
+  }
+}
+
+.rgb-animate {
+  animation: rgbBackground 10s infinite;
+} */
+
+
 @import "tailwindcss";

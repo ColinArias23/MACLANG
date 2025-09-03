@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { Form, Input, Button, Typography } from "antd";
 import {
   UserOutlined,
@@ -6,14 +6,24 @@ import {
   EyeInvisibleOutlined,
   EyeTwoTone,
 } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 
 const LoginForm = () => {
   const [form] = Form.useForm();
+  const [loading, SetLoading] = useState(false);
+  const navigate = useNavigate();
 
   const onFinish = (values) => {
     console.log("Login attempt:", values);
+
+    SetLoading(true);
+
+  setTimeout(() => {
+    SetLoading(false);
+    navigate("/dashboard");
+  }, 1500);
   };
 
   return (
@@ -21,7 +31,8 @@ const LoginForm = () => {
       <div className="w-full max-w-md">
         <div className="mb-8">
           <Title level={1} className="!text-4xl !font-bold !text-gray-800">
-            Welcome Back!
+            Welcome to RMBGH
+            <p className="text-lg">We’re glad to have you back!</p>
           </Title>
           <Text className="text-lg text-gray-600">Access your Account.</Text>
         </div>
@@ -73,6 +84,7 @@ const LoginForm = () => {
               htmlType="submit"
               className="w-full"
               size="large"
+              loading={loading}
             >
               Sign In
             </Button>

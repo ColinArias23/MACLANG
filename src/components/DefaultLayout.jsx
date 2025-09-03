@@ -40,6 +40,7 @@ const DefaultLayout = ({ children }) => {
     <div className="flex h-screen">
       {/* Sidebar */}
       <div
+       style={{ backgroundColor: "rgb(30, 60, 90)" }}
         className={`${
           isCollapsed ? "w-[80px]" : "w-[250px]"
         } bg-blue-900 h-full p-5 pt-7 duration-300 fixed flex flex-col justify-between border-r border-gray-500`}
@@ -47,7 +48,7 @@ const DefaultLayout = ({ children }) => {
         {/* Toggle Button */}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="flex items-center justify-center w-10 h-10 rounded-md bg-blue-800 text-white hover:bg-yellow-500 transition-all mb-6"
+          className="flex items-center justify-center w-10 h-10 rounded-md bg-green-600 text-white hover:bg-yellow-500 transition-all mb-6"
         >
           {isCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         </button>
@@ -75,8 +76,9 @@ const DefaultLayout = ({ children }) => {
       <NavLink
         to={menu.href}
         className={({ isActive }) =>
-          `flex items-center gap-x-3 p-2 text-sm text-white rounded-md
-          ${isActive ? "bg-yellow-500" : ""}
+          `flex items-center gap-x-3 p-2 text-sm text-white rounded-md transition-all duration-300 ease-in-out
+           transform hover:scale-[1.20]
+          ${isActive ? "bg-yellow-500" : "hover:bg-yellow-500"}
           `
         }
       >
@@ -121,7 +123,7 @@ const DefaultLayout = ({ children }) => {
           {/* Logout Button */}
           {profileOpen && (
             <div
-              className={`absolute bottom-14 bg-blue-900 rounded-lg shadow-md transition-all duration-300 ${
+              className={`absolute bottom-14 bg-red-600 rounded-lg shadow-md transition-all duration-300 ${
                 isCollapsed ? "left-[85px] w-[200px]" : "left-0 w-full"
               }`}
             >
@@ -129,7 +131,7 @@ const DefaultLayout = ({ children }) => {
                 <li>
                   <button
                     onClick={() => (window.location.href = "/login")}
-                    className="flex items-center gap-x-2 w-full text-left text-white text-sm p-2 rounded-md hover:bg-yellow-500"
+                    className="flex items-center gap-x-2 w-full text-left text-white text-sm bg-red-600 p-2 rounded-md hover:bg-white hover:text-red-600 transition-all"
                   >
                     <LogoutOutlined />
                     <span>Logout</span>
@@ -143,6 +145,7 @@ const DefaultLayout = ({ children }) => {
 
       {/* Content Area */}
       <div
+       style={{ backgroundColor: "rgb(30, 60, 90)" }}
         className={`flex-1 bg-blue-900 min-h-screen p-5 transition-all duration-300 ${
           isCollapsed ? "ml-[80px]" : "ml-[250px]"
         }`}

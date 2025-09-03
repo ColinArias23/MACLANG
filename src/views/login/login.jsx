@@ -7,7 +7,7 @@ import Footer from "./components/footer";
 function Login() {
   return (
     <div className="min-h-screen flex text-gray-900">
-      <div className="w-full lg:w-1/2 bg-gray-200 flex flex-col">
+      <div className="flex flex-col bg-gray-100 justify-between flex-1">
         <Header />
         <LoginForm />
         <Footer />
