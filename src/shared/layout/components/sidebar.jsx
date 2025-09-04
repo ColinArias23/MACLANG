@@ -99,28 +99,32 @@ function Sidebar({ isCollapsed, setIsCollapsed }) {
       {/* Profile */}
       <div className="mt-auto relative" ref={dropdownRef}>
         <div
-          className="flex items-center gap-x-3 p-2 rounded-md cursor-pointerhover:bg-[#1f236d]"
+          className="flex items-center gap-x-3 p-2 rounded-md cursor-pointer hover:bg-[#1f236d]"
           onClick={() => setProfileOpen(!profileOpen)}
         >
-          <div className="flex items-center justify-center w-10 h-10 bg-white rounded-full">
-            <UserOutlined className="text-white text-lg" />
-          </div>
-          <div
-            className={`transition-all duration-300 ${
-              isCollapsed
-                ? "opacity-0 w-0 overflow-hidden"
-                : "opacity-100 w-auto flex flex-col"
-            }`}
-          >
-            <span className="text-white text-sm font-medium">John Doe</span>
-            <span className="text-gray-300 text-xs">Admin</span>
-          </div>
+         <div className="flex items-center gap-3 p-2 rounded-md hover:bg-[#1f236d] hover:shadow-md cursor-pointer transition duration-200">
+  <div className="flex items-center justify-center w-10 h-10 bg-white rounded-full">
+    <UserOutlined className="text-gray-800 text-lg" />
+  </div>
+
+  <div
+    className={`transition-all duration-300 ${
+      isCollapsed
+        ? "opacity-0 w-0 overflow-hidden"
+        : "opacity-100 w-auto flex flex-col"
+    }`}
+  >
+    <span className="text-white text-sm font-medium">John Doe</span>
+    <span className="text-gray-300 text-xs">Admin</span>
+  </div>
+</div>
+
         </div>
 
         {/* Logout Button */}
         {profileOpen && (
           <div
-            className={`absolute bottom-14 bg-blue-900 rounded-lg shadow-md transition-all duration-300 ${
+            className={`absolute bottom-20 bg-blue-800 rounded-lg shadow-md transition-all duration-300 ${
               isCollapsed ? "left-[85px] w-[200px]" : "left-0 w-full"
             }`}
           >
@@ -128,7 +132,7 @@ function Sidebar({ isCollapsed, setIsCollapsed }) {
               <li>
                 <button
                   onClick={() => (window.location.href = "/login")}
-                  className="flex items-center gap-x-2 w-full text-left text-white text-sm p-2 rounded-md hover:bg-[#1f236d]"
+                  className="flex items-center gap-x-2 w-full text-left text-white text-sm p-2 rounded-md hover:bg-[#1f236d] shadow-m"
                 >
                   <LogoutOutlined />
                   <span>Logout</span>
