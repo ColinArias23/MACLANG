@@ -69,20 +69,8 @@ const Dashboard = () => { // Renamed the component to Dashboard
             />
           </div>
 
-          {/* Back Button */}
-          {searchQuery && (
-            <div className="mt-4">
-              <button
-                onClick={() => setSearchQuery("")}
-                className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
-              >
-                Back
-              </button>
-            </div>
-          )}
-
           {/* Cards Grid */}
-          <div className="flex-1 overflow-y-auto mt-6 pr-2">
+          <div className="flex-1 overflow-y-auto mt-6 pr-2 max-h-screen">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredCards.length > 0 ? (
                 filteredCards.map((card, index) => {
@@ -114,10 +102,11 @@ const Dashboard = () => { // Renamed the component to Dashboard
               )}
             </div>
           </div>
+
         </div>
       </Content>
     </div>
   );
 };
 
-export default Dashboard; 
+export default Dashboard;
