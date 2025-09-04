@@ -44,7 +44,7 @@ function Sidebar({ isCollapsed, setIsCollapsed }) {
       {/* Toggle Button */}
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="flex items-center justify-center w-10 h-10 rounded-md bg-blue-800 text-white hover:bg-yellow-500 transition-all mb-6"
+        className="flex items-center justify-center w-10 h-10 rounded-md bg-blue-800 text-white hover:bg-[#1f236d] transition-all mb-6"
       >
         {isCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
       </button>
@@ -70,7 +70,7 @@ function Sidebar({ isCollapsed, setIsCollapsed }) {
         {Menus.map((menu, index) => (
           <li
             key={index}
-            className="relative group flex items-center gap-x-3 text-white text-sm cursor-pointer p-2 rounded-md hover:bg-yellow-500 transition-all"
+            className="relative group flex items-center gap-x-3 text-white text-sm cursor-pointer p-2 rounded-md hover:bg-[#1f236d] transition-all"
           >
             {/* Icon */}
             <span className="text-xl">{menu.src}</span>
@@ -88,7 +88,7 @@ function Sidebar({ isCollapsed, setIsCollapsed }) {
 
             {/* Floating Tooltip (visible only when collapsed + hover) */}
             {isCollapsed && (
-              <span className="absolute left-full ml-3 px-3 py-1 bg-yellow-500 text-white text-lg rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+              <span className="absolute left-full ml-3 px-3 py-1 bg-blue-800 text-white text-lg rounded-md shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                 {menu.title}
               </span>
             )}
@@ -99,7 +99,7 @@ function Sidebar({ isCollapsed, setIsCollapsed }) {
       {/* Profile */}
       <div className="mt-auto relative" ref={dropdownRef}>
         <div
-          className="flex items-center gap-x-3 p-2 rounded-md cursor-pointer hover:bg-yellow-500"
+          className="flex items-center gap-x-3 p-2 rounded-md cursor-pointerhover:bg-[#1f236d]"
           onClick={() => setProfileOpen(!profileOpen)}
         >
           <div className="flex items-center justify-center w-10 h-10 bg-white rounded-full">
@@ -128,7 +128,7 @@ function Sidebar({ isCollapsed, setIsCollapsed }) {
               <li>
                 <button
                   onClick={() => (window.location.href = "/login")}
-                  className="flex items-center gap-x-2 w-full text-left text-white text-sm p-2 rounded-md hover:bg-yellow-500"
+                  className="flex items-center gap-x-2 w-full text-left text-white text-sm p-2 rounded-md hover:bg-[#1f236d]"
                 >
                   <LogoutOutlined />
                   <span>Logout</span>

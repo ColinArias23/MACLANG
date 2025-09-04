@@ -1,8 +1,12 @@
 import React from "react";
 
-const Content = ({ children }) => {
+const Content = ({ children, isCollapsed }) => {
   return (
-    <div className="w-full ml-64 bg-white rounded-xl p-4 mb-5 mr-5">
+    <div
+      className={`transition-all duration-300 bg-white rounded-xl p-4 ${
+        isCollapsed ? "ml-16 w-[calc(100%-4rem)]" : "ml-64 w-[calc(100%-16rem)]"
+      }`}
+    >
       {children}
     </div>
   );

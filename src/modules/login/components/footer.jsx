@@ -1,14 +1,9 @@
 import React from "react";
-import { Typography } from "antd";
-
-const { Text } = Typography;
 
 const Footer = () => {
   return (
-    <div className="text-center py-4">
-      <Text className="text-sm text-gray-600">
-        © 2025 IT Department. All rights reserved.
-      </Text>
+    <div className="text-xs text-white text-center mt-8 mb-4">
+      © {new Date().getFullYear()} RMBGH. All Rights Reserved.
     </div>
   );
 };

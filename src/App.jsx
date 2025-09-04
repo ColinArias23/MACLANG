@@ -8,7 +8,8 @@ import Login from "./modules/login/login.jsx";
 import Main from "./modules/main/main.jsx";
 import Users from "./modules/users/users.jsx";
 import AnnouncementDetail from "./modules/users/announcementdetail.jsx"; 
-import Admin from "./modules/admin/admin.jsx";
+// import Admin from "./modules/admin/admin.jsx";
+import Dashboard from "./modules/dashboard/dashboard.jsx";
 
 function App() {
   return (
@@ -26,8 +27,8 @@ function App() {
         {/* Users Route */}
         <Route path="/users" element={<Users />} />
 
-        {/* Admin Route */}
-        <Route path="/admin" element={<Admin />} />
+        {/* Dashboard Route */}
+        <Route path="/dashboard" element={<Dashboard />} />
 
         {/* ✅ Detail Route */}
       <Route path="/announcement/:title" element={<AnnouncementDetail />} />
