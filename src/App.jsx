@@ -4,21 +4,36 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Login from "./modules/login/login.jsx";
-import Main from "./modules/main/main.jsx";
+import DefaultLayout from "./components/defaultlayout.jsx";
+import Login from "./view/login/login.jsx";
+import Dashboard from "./view/dashboard/dashboard.jsx";
+import Department from "./view/department/department.jsx";
+import Inbox from "./view/inbox/inbox.jsx";
+import All from "./view/all/all.jsx";
+import Settings from "./view/settings/settings.jsx";
+
 
 function App() {
   return (
     <Router>
       <Routes>
-        {/* Redirect root to /login */}
+        {/* Default route redirects to login */}
         <Route path="/" element={<Navigate to="/login" replace />} />
 
-        {/* Login Route */}
+        {/* Auth routes */}
         <Route path="/login" element={<Login />} />
 
-        {/* Main Route */}
-        <Route path="/main" element={<Main />} />
+        {/* Main pages */}
+        <Route element={<DefaultLayout />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/department" element={<Department />} />
+          <Route path="/inbox" element={<Inbox />} />
+          <Route path="/all" element={<All />} />
+          <Route path="/settings" element={<Settings />} />
+        </Route>
+
+        {/* Catch-all route for undefined paths */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </Router>
   );

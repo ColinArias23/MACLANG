@@ -1,5 +1,6 @@
 body {
   font-family: "Poppins", sans-serif;
+  overflow: hidden;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
@@ -13,5 +14,64 @@ body {
 ::-webkit-scrollbar-thumb:window-inactive {
   background: rgba(220, 220, 220, 0.2);
 }
+
+/* Sidebar Tooltip Styles */
+.sidebar-tooltip .ant-tooltip-inner {
+  background: #1e40af;
+  color: white;
+  font-weight: 500;
+  border-radius: 6px;
+}
+
+.sidebar-tooltip .ant-tooltip-arrow::before {
+  background: #1e40af;
+}
+
+/* Profile Dropdown Styles */
+.profile-dropdown .ant-dropdown-menu {
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.profile-dropdown .ant-dropdown-menu-item {
+  color: #334155;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin: 4px;
+  transition: all 0.2s ease;
+}
+
+.profile-dropdown .ant-dropdown-menu-item:hover {
+  background-color: #e2e8f0;
+  color: #1e40af;
+}
+
+.profile-dropdown .ant-dropdown-menu-divider {
+  border-color: #cbd5e1;
+  margin: 8px 4px;
+}
+
+/* Sidebar Scrollbar Styling */
+.ant-layout-sider::-webkit-scrollbar {
+  width: 4px;
+}
+
+.ant-layout-sider::-webkit-scrollbar-track {
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 2px;
+}
+
+.ant-layout-sider::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.3);
+  border-radius: 2px;
+}
+
+.ant-layout-sider::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.5);
+}
+
 
 @import "tailwindcss";

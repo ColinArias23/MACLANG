@@ -1,5 +1,5 @@
-import React from "react";
-import { Form, Input, Button, Typography } from "antd";
+import React, { useState } from "react";
+import { Form, Input, Button, Typography, message } from "antd";
 import {
   UserOutlined,
   LockOutlined,
@@ -9,11 +9,17 @@ import {
 
 const { Title, Text } = Typography;
 
-const LoginForm = () => {
+const LoginForm = ({ handleLogin }) => {
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
 
-  const onFinish = (values) => {
+  const onFinish = async (values) => {
+    setLoading(true);
     console.log("Login attempt:", values);
+    setTimeout(() => {
+      handleLogin(values); 
+      setLoading(false);
+    }, 2000); 
   };
 
   return (
@@ -73,8 +79,9 @@ const LoginForm = () => {
               htmlType="submit"
               className="w-full"
               size="large"
+              loading={loading} 
             >
-              Sign In
+              {loading ? "Signing In..." : "Sign In"}
             </Button>
           </Form.Item>
         </Form>
