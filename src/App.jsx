@@ -12,7 +12,6 @@ import Inbox from "./view/inbox/inbox.jsx";
 import All from "./view/all/all.jsx";
 import Settings from "./view/settings/settings.jsx";
 
-
 function App() {
   return (
     <Router>
