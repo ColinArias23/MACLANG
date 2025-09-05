@@ -13,7 +13,11 @@ import {
   notification,
 } from "antd";
 import {
+  CameraOutlined,
+  FileTextOutlined,
   EditOutlined,
+  LinkOutlined,
+  CalendarOutlined,
   PushpinOutlined,
   ArrowLeftOutlined,
   DeleteOutlined,
@@ -286,7 +290,7 @@ const InboxInterface = () => {
   );
 
   return (
-    <div className="w-full h-[89vh] flex flex-col">
+    <div className="w-full h-[88vh] flex flex-col">
       {contextHolder}
       <Card
         className="shadow-xl border-0 rounded-xl overflow-hidden flex flex-col w-full h-full 
@@ -348,61 +352,69 @@ const InboxInterface = () => {
             {/* Messages List */}
             <div ref={listRef} className="flex-3 overflow-hidden bg-white">
               {paginatedMessages.map((msg) => (
-                <div
-                  key={msg.id}
-                  className="inbox-message-item flex items-center justify-between px-6 py-4 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
-                >
-                  <div
-                    onClick={() => handleMessageClick(msg)}
-                    className="flex items-center gap-4 flex-1 cursor-pointer"
-                  >
-                    <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Text className="font-medium text-gray-900 text-sm">
-                          {msg.sender}
-                        </Text>
-                        {msg.isPinned && (
-                          <PushpinOutlined className="text-orange-500 text-xs" />
-                        )}
-                      </div>
-                      <Text className="text-gray-700 text-sm block truncate">
-                        {msg.subject}
-                        {msg.department && (
-                          <span className="ml-2 text-xs text-blue-500">
-                            [{msg.department}]
-                          </span>
-                        )}
-                      </Text>
-                    </div>
-                  </div>
+<div
+  key={msg.id}
+  className={`inbox-message-item flex px-6 py-4 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0 
+    ${msg.sender === "You" ? "justify-end" : "justify-start"}`} // Conditionally apply justify-end for user messages
+>
+  <div
+    onClick={() => handleMessageClick(msg)}
+    className={`flex items-center gap-4 cursor-pointer ${msg.sender === "You" ? "flex-row-reverse" : ""}`} // Flip content for user messages
+  >
+    {msg.sender !== "You" && (
+      <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>
+    )}
+    <div className="flex-1 min-w-0">
+      <div className="flex items-center gap-2 mb-1">
+        <Text className="font-medium text-gray-900 text-sm">
+          {msg.sender}
+        </Text>
+        {msg.isPinned && (
+          <PushpinOutlined className="text-orange-500 text-xs" />
+        )}
+      </div>
+      <Text className="text-gray-700 text-sm block truncate">
+        {msg.subject}
+        {msg.department && (
+          <span className="ml-2 text-xs text-blue-500">
+            [{msg.department}]
+          </span>
+        )}
+      </Text>
+    </div>
+  </div>
 
-                  <div className="flex items-center gap-2">
-                    <span className="text-gray-500 text-sm">
-                      {msg?.date || "No Date"}
-                    </span>
-                    <Button
-                      type="text"
-                      icon={<PushpinOutlined />}
-                      onClick={() => handleTogglePin(msg.id)}
-                      className={`${
-                        msg.isPinned ? "text-orange-500" : "text-gray-400"
-                      }`}
-                    />
-                    <Popconfirm
-                      title="Delete this message?"
-                      onConfirm={() => handleDelete(msg.id)}
-                      okText="Yes"
-                      cancelText="No"
-                    >
-                      <Button
-                        type="text"
-                        icon={<DeleteOutlined />}
-                        className="text-red-400"
-                      />
-                    </Popconfirm>
-                  </div>
-                </div>
+  <div className="flex items-center gap-2">
+    <span className="text-gray-500 text-sm">
+      {msg?.date || "No Date"}
+    </span>
+    {msg.sender !== "You" && (
+      <>
+        <Button
+          type="text"
+          icon={<PushpinOutlined />}
+          onClick={() => handleTogglePin(msg.id)}
+          className={`${
+            msg.isPinned ? "text-orange-500" : "text-gray-400"
+          }`}
+        />
+        <Popconfirm
+          title="Delete this message?"
+          onConfirm={() => handleDelete(msg.id)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Button
+            type="text"
+            icon={<DeleteOutlined />}
+            className="text-red-400"
+          />
+        </Popconfirm>
+      </>
+    )}
+  </div>
+</div>
+
               ))}
             </div>
 
@@ -519,72 +531,105 @@ const InboxInterface = () => {
 
       {/* Compose Modal */}
       <Modal
-        open={isComposeOpen}
-        onCancel={handleComposeClose}
-        footer={null}
-        width={800}
-        closable={true}
-        closeIcon={<CloseOutlined />}
-        centered
+  open={isComposeOpen}
+  onCancel={handleComposeClose}
+  footer={null}
+  width={800}
+  closable={true}
+  closeIcon={<CloseOutlined />}
+  centered
+>
+  <div className="p-6">
+    <div className="mb-4">
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        Subject
+      </label>
+      <Input
+        placeholder="Enter subject"
+        value={composeData.subject}
+        onChange={(e) => handleComposeChange("subject", e.target.value)}
+        className="flex-1 text-base"
+      />
+    </div>
+    <div className="mb-4">
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        Department
+      </label>
+      <Select
+        placeholder="Select department"
+        value={composeData.department}
+        onChange={(value) => handleComposeChange("department", value)}
+        className="w-full"
       >
-        <div className="p-6">
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Subject
-            </label>
-            <Input
-              placeholder="Enter subject"
-              value={composeData.subject}
-              onChange={(e) => handleComposeChange("subject", e.target.value)}
-              className="flex-1 text-base"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Department
-            </label>
-            <Select
-              placeholder="Select department"
-              value={composeData.department}
-              onChange={(value) => handleComposeChange("department", value)}
-              className="w-full"
-            >
-              {departments.map((dept) => (
-                <Option key={dept} value={dept}>
-                  {dept}
-                </Option>
-              ))}
-            </Select>
-          </div>
-          <div className="mb-6">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Message
-            </label>
-            <TextArea
-              placeholder="Type your message here..."
-              value={composeData.message}
-              onChange={(e) => handleComposeChange("message", e.target.value)}
-              rows={10}
-              className="w-full border rounded-lg p-4 resize-none text-base"
-            />
-          </div>
-          <div className="flex items-center justify-end gap-3">
-            <Button
-              onClick={handleSend}
-              type="primary"
-              icon={<SendOutlined />}
-              disabled={
-                !composeData.subject ||
-                !composeData.message ||
-                !composeData.department
-              }
-              className="bg-indigo-600 hover:bg-indigo-700 border-0"
-            >
-              Post Message
-            </Button>
-          </div>
-        </div>
-      </Modal>
+        {departments.map((dept) => (
+          <Option key={dept} value={dept}>
+            {dept}
+          </Option>
+        ))}
+      </Select>
+    </div>
+    <div className="mb-6">
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        Message
+      </label>
+      <TextArea
+        placeholder="Type your message here..."
+        value={composeData.message}
+        onChange={(e) => handleComposeChange("message", e.target.value)}
+        rows={10}
+        className="w-full border rounded-lg p-4 resize-none text-base"
+      />
+    </div>
+
+    {/* Add Image, Add Document, Add Event, Add Links */}
+    <div className="flex gap-4 mt-4">
+      <Button
+        icon={<CameraOutlined />}
+        onClick={() => handleAddAttachment("picture")}
+        className="flex items-center gap-2 text-sm text-gray-700 hover:text-gray-900"
+      >
+        Add Image
+      </Button>
+      <Button
+        icon={<FileTextOutlined />}
+        onClick={() => handleAddAttachment("document")}
+        className="flex items-center gap-2 text-sm text-gray-700 hover:text-gray-900"
+      >
+        Add Document
+      </Button>
+      <Button
+        icon={<LinkOutlined />}
+        onClick={() => handleAddAttachment("link")}
+        className="flex items-center gap-2 text-sm text-gray-700 hover:text-gray-900"
+      >
+        Add Links
+      </Button>
+      <Button
+        icon={<CalendarOutlined />}
+        onClick={() => handleAddAttachment("event")}
+        className="flex items-center gap-2 text-sm text-gray-700 hover:text-gray-900"
+      >
+        Add Event
+      </Button>
+    </div>
+
+    <div className="flex items-center justify-end gap-3 mt-4">
+      <Button
+        onClick={handleSend}
+        type="primary"
+        icon={<SendOutlined />}
+        disabled={
+          !composeData.subject ||
+          !composeData.message ||
+          !composeData.department
+        }
+        className="bg-indigo-600 hover:bg-indigo-700 border-0"
+      >
+        Post Message
+      </Button>
+    </div>
+  </div>
+</Modal>
     </div>
   );
 };

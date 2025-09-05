@@ -11,6 +11,8 @@ import {
   UserOutlined,
   MenuUnfoldOutlined,
   MenuFoldOutlined,
+  SoundOutlined,
+  MessageOutlined,
 } from "@ant-design/icons";
 import { useNavigate, useLocation, Outlet } from "react-router-dom";
 import Maclang from "../../images/maclang.png";
@@ -25,9 +27,9 @@ const DefaultLayout = () => {
   const menuItems = [
     { key: "1", icon: <HomeOutlined />, label: "Dashboard", path: "/dashboard" },
     { key: "2", icon: <ShopOutlined />, label: "Department", path: "/department" },
-    { key: "3", icon: <InboxOutlined />, label: "Inbox", path: "/inbox" },
-    { key: "4", icon: <TeamOutlined />, label: "All", path: "/all" },
-    { key: "5", icon: <SettingOutlined />, label: "Settings", path: "/settings" },
+    { key: "3", icon: <SoundOutlined />, label: "Announcement", path: "/inbox" },
+    { key: "4", icon: <MessageOutlined />, label: "Group Chat", path: "/all" },
+    // { key: "5", icon: <SettingOutlined />, label: "Settings", path: "/settings" },
   ];
 
   // Map current path to selectedKey

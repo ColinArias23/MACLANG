@@ -86,7 +86,7 @@ const Dashboard = () => {
   );
 
   return (
-    <div className="flex h-screen bg-white overflow-hidden">
+    <div className="flex h-[89vh] bg-white overflow-hidden">
       {/* Sidebar (if any) */}
       {/* <Sidebar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} /> */}
 

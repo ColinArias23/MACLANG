@@ -28,7 +28,7 @@ function App() {
           <Route path="/department" element={<Department />} />
           <Route path="/inbox" element={<Inbox />} />
           <Route path="/all" element={<All />} />
-          <Route path="/settings" element={<Settings />} />
+          {/* <Route path="/settings" element={<Settings />} /> */}
         </Route>
 
         {/* Catch-all route for undefined paths */}
